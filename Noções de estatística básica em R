@@ -1,0 +1,139 @@
+---
+title: 'Noções basicas de R'
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+# Introdução ao R
+O R é uma linguagem de programação estatística que possui uma série de vantagens, como ser totalmente gratuito e de código aberto, ser relativamente fácil de usar e possuir uma ampla comunidade acadêmica. Na biologia, é uma linguagem muito utilizada, o que facilita na hora de buscar soluções a possíveis problemas. Outra vantagem do R é que seus gráficos são bem aceitos, podendo ser utilizados em artigos (ao contrário dos gráficos do Excel, que não são recomendados). O R é normalmente utilizado junto a uma interface gráfica que o organiza, de forma que a utilização é mais amigável. No caso, utilizaremos o R Studio.
+
+### Como instalar?
+É muito simples. Acesse o site https://cran.r-project.org/mirrors.html e selecione um dos sites listados como "Brazil". Lá, é possível escolher seu sistema operacional. Faça o download do programa e execute-o seguindo as instruções.
+Em seguida, acesse https://rstudio.com/products/rstudio/download/ e escolha a opção "free". Baixe o arquivo e execute-o, seguindo as instruções.
+
+### Usando o R
+Não abra o R "puro", mas sempre pelo R Studio. Ele é dividido em quatro partes:
+
+1. O **editor de código**, no canto superior esquerdo, onde será possível escrever e editar scripts (que são o "rascunho" do seu código).
+
+2. O **console**, no canto inferior esquerdo, é onde o comando será rodado de fato no R. É possível escrever os códigos diretamente nele, apesar de não ser o recomendado. Para rodar um comando no editor de código para o console, é possível usar a função "Run" na barra superior do editor ou o atalho "Enter + ctrl".
+
+3. **Environment** e **history**, no canto superior direito. No primeiro, estarão os objetos criados (listas, vetores, etc). O history é o histórico de comandos utilizados.
+
+4. **Files**, **plots**, **packages**, **help** e **viewer**, no canto inferior direito. Essa janela reúne várias funcionalidades em guias, onde Files são os arquivos da sua pasta de trabalho, Plots são as imagens geradas (especialmente gráficos), Packages reune uma lista de pacotes (funções extras do R), Help é o manual do R e Viewer serve para vizualizar-se localmente conteúdo web.
+
+# Primeiros passos no R
+A primeira experiência no R é usá-lo como uma grande calculadora, digitando as operações matemáticas. Tente o seguinte:
+```{r}
+2 + 2
+```
+Note que ele retorna o resultado da operação no console, como "[1] 4". Tente outras operações.
+```{r}
+6 - 2
+4 * 4
+16/8
+4^3
+(62 + 8)/(4 * (9 - 6/2))
+```
+Para se criar um objeto, usa-se o comando "<-" ou "=". Vamos usar "<-" por estilística. Experimente criar o seguinte objeto:
+```{r}
+x <- 5
+```
+Agora o comando "x" funciona como o número 5. Experimente:
+```{r}
+x + 5
+(x*6)/2
+x + x
+```
+
+
+## Tipos de objetos no R
+As operações matemáticas acima não são objetos, mas simples códigos. No R, existem cinco classes de objeto: vetor, matriz, data frame, funções e lista.
+
+### Vetor
+São divididos em três tipos de vetores: caracteres (nomes), numérico (números) e lógico (são quantidades lógicas, criando-se condições que, se satisfeitas ou não, retornam TRUE ou FALSE). 
+Uma função importante no R é a concatenar (c()), que permite que se liste uma série de números ou palavras.
+```{r}
+x <- 15 #vetor de tamanho 1
+y <- c(1, 2, 3, 4, 5)
+dados <- seq(1, 20, 4) #cria-se uma sequência se número de 1 a 20, de 4 em 4
+cores <- c("vermelho", "verde", "azul", "amarelo") #vetor de caracteres
+x < 1 #vetor lógico
+x == 1
+x != 1
+
+```
+Printe "x", "y", "dados" e "cores" no console para ver os vetores criados.
+
+### Fator
+Cria uma variável categórica, como em níveis.
+```{r}
+fatores <- factor(c("baixo", "médio", "alto"))
+```
+
+
+### Matriz
+Uma matriz é um arranjo bidimensional de vetores, que devem ser do mesmo tipo (caracteres ou numérico).
+```{r}
+xy <- matrix(1:12, nrow = 3)
+```
+Uma série de funções podem ser rodadas a partir dessa matriz, que oferecerão modificações ou informações sobre a matriz.
+```{r}
+rownames(xy) <- LETTERS[1:3] #chama cada linha por uma letra, é possível fazer também:
+rownames(xy) <- c("A", "B", "C")
+colnames(xy) <- c("a1", "a2", "a3", "a4") #chama cada coluna por um nome
+xy[1,] #chama a primeira linha
+xy[,1] #chama a primeira coluna
+head(xy) #primeiras linhas da matriz
+tail(xy) #últimas linhas da matrix
+summary(xy) #dá informações gerais sobre a matriz
+```
+### Data frame
+Funciona igual a uma matriz, mas suporta vetores de tipos diferentes, sendo o mais comumente usado.
+```{r}
+receita <- data.frame(ingredientes = c("Farinha", "Cenoura", "Óleo", "Açúcar"),
+                      ordem = factor(c("primeiro", "segundo", "terceiro", "quarto")),
+                      quantidade = c(1, 1.5, 0.5, 1.5))
+class(receita)
+xy <- as.data.frame(xy) #converte a matriz em dataframe
+```
+
+### Lista
+Reúne um conjunto de objetos ordenados de forma hierárquica, podendo ser uma matriz, um vetor lógico, etc.]
+```{r}
+lista <- list(name = "João", esposa = "Maria", 
+              total.de.filhos = 2, idades = c(13,9))
+```
+
+## Visualizações gráficas
+O R é uma ótima ferramenta para construir gráficos. Aqui, veremos alguns funções básicas e nativas, mas saiba que existem outros pacotes e formas de construir gráficos no R.
+Primeiro, vamos montar um dataframe básico:
+```{r}
+set.seed(1)
+dados <- data.frame(amostras = c(1:100), peso = rnorm(100, mean = 5, sd = 1), altura = rnorm(100, mean = 10, sd = 1))
+```
+Printe "dados" no seu console para ver o dataframe. Temos seis amostras (a1, a2, ..., a6) e dados de peso e altura para elas. A função rnorm() cria valores aleatórios com distribuição normal com a média e o desvio padrão pedidos (veremos essas métricas adiante no curso).
+
+Podemos então ver alguns gráficos possíveis de se fazer. O primeiro é a função plot(). Primeiro, vamos rodar o attach(dados) para que possamos usar os títulos das colunas como variáveis:
+```{r}
+attach(dados)
+plot(peso, altura)
+```
+O gráfico pode ser totalmente personalizado. Para entrar rapidamente na página do plot() na sessão "help", tecle F1 junto a função.
+```{r}
+plot(peso, altura, col = 2, ylab = "Altura em cm",
+     xlab = "Peso em g", type = "p", sub = "Teste no R")
+```
+Outro gráfico possível de se fazer é um histograma:
+```{r}
+hist(peso, xlab = "Peso em g", col = 5)
+hist(altura, xlab = "Altura em cm", col = 3)
+```
+
+O boxplot, ou gráfico de caixa, é utilizado para visualizar a posição, dispersão, simetria, caudas e valores discrepantes dos dados. Ele mostra o primeiro e terceiro quartis e a mediana dos dados, assim como os limites superior e inferior. O asterisco/ponto acima ou abaixo do gráfico indicam os outliers.
+```{r}
+boxplot(altura, peso, col = c(2,3))
+```
+Outros gráficos são possíveis no R. Essa seção foi apenas para dar uma ideia geral a respeito de gráficos, e iremos tentar abordar outros no futuro.
