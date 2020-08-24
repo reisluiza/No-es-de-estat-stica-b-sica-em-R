@@ -112,7 +112,7 @@ O R é uma ótima ferramenta para construir gráficos. Aqui, veremos alguns fun�
 Primeiro, vamos montar um dataframe básico:
 ```{r}
 set.seed(1)
-dados <- data.frame(amostras = c(1:100), peso = rnorm(100, mean = 5, sd = 1), altura = rnorm(100, mean = 10, sd = 1))
+dados <- data.frame(amostras = c(1:100), peso = sort(rnorm(100, mean = 5, sd = 1), decreasing = FALSE), altura = sort(rnorm(100, mean = 10, sd = 1), decreasing = FALSE))
 ```
 Printe "dados" no seu console para ver o dataframe. Temos seis amostras (a1, a2, ..., a6) e dados de peso e altura para elas. A função rnorm() cria valores aleatórios com distribuição normal com a média e o desvio padrão pedidos (veremos essas métricas adiante no curso).
 
