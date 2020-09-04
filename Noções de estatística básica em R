@@ -1,8 +1,8 @@
 ---
 title: 'Noções basicas de R'
 output:
-  pdf_document: default
   html_notebook: default
+  pdf_document: default
   html_document:
     df_print: paged
 ---
@@ -114,26 +114,82 @@ Primeiro, vamos montar um dataframe básico:
 set.seed(1)
 dados <- data.frame(amostras = c(1:100), peso = sort(rnorm(100, mean = 5, sd = 1), decreasing = FALSE), altura = sort(rnorm(100, mean = 10, sd = 1), decreasing = FALSE))
 ```
-Printe "dados" no seu console para ver o dataframe. Temos seis amostras (a1, a2, ..., a6) e dados de peso e altura para elas. A função rnorm() cria valores aleatórios com distribuição normal com a média e o desvio padrão pedidos (veremos essas métricas adiante no curso).
+Printe "dados" no seu console para ver o dataframe. Temos 100 amostras e dados de peso e altura para elas. A função rnorm() cria valores aleatórios com distribuição normal com a média e o desvio padrão pedidos (veremos essas métricas adiante no curso). A função sort() organiza elas em ordem do menor para o maior.
 
 Podemos então ver alguns gráficos possíveis de se fazer. O primeiro é a função plot(). Primeiro, vamos rodar o attach(dados) para que possamos usar os títulos das colunas como variáveis:
 ```{r}
 attach(dados)
 plot(peso, altura)
 ```
-O gráfico pode ser totalmente personalizado. Para entrar rapidamente na página do plot() na sessão "help", tecle F1 junto a função.
+O gráfico pode ser totalmente personalizado. Para entrar rapidamente na página do plot() na sessão "help", tecle F1 junto a função, e lá estarão detalhadas todas as modificações possíveis de se fazer no gráfico.
 ```{r}
-plot(peso, altura, col = 2, ylab = "Altura em cm",
+plot(peso, altura, col = "deepskyblue4", ylab = "Altura em cm",
      xlab = "Peso em g", type = "p", sub = "Teste no R")
 ```
 Outro gráfico possível de se fazer é um histograma:
 ```{r}
-hist(peso, xlab = "Peso em g", col = 5)
-hist(altura, xlab = "Altura em cm", col = 3)
+hist(peso, xlab = "Peso em g", col = "deepskyblue4")
+hist(altura, xlab = "Altura em cm", col = "chartreuse4")
 ```
 
 O boxplot, ou gráfico de caixa, é utilizado para visualizar a posição, dispersão, simetria, caudas e valores discrepantes dos dados. Ele mostra o primeiro e terceiro quartis e a mediana dos dados, assim como os limites superior e inferior. O asterisco/ponto acima ou abaixo do gráfico indicam os outliers.
 ```{r}
-boxplot(altura, peso, col = c(2,3))
+boxplot(altura, peso, col = c("deepskyblue4","chartreuse4"))
 ```
 Outros gráficos são possíveis no R. Essa seção foi apenas para dar uma ideia geral a respeito de gráficos, e iremos tentar abordar outros no futuro.
+
+# Estatística básica
+O termo **população** diz respeito a um grupo, seja do que for, cujas informações são do interesse do pesquisador. Já a **amostra** é uma parcela dessa população. Por exemplo, todos os peixes no oceano são uma _população_, enquanto aqueles pescados por um pescador é a _amostra_. Ao trabalharmos, dificilmente toda a população será considerada, mas a amostra escolhida deve representar a população.
+
+Após a obtenção dos dados, é possível obter rapidamente alguns descritores rápidos a respeito da amostra, as chamadas **medidas de tendência central**, que nos contam quais são os dados mais vistos e centrais, e **de dispersão**, que contam como os dados se organizam e distribuem – esses descritores são chamados de **parâmetros**. O uso de réplicas, comum na biologia, vem da necessidade de se garantir um resultado próximo à realidade: algumas amostras podem supervalorizar ou desvalorizar determinado parâmetro (são os chamados _outliers_), mas a análise de muitas amostras traz o resultado a um número próximo do real.
+
+## Medidas de tendência central
+### Média
+É o parâmetro mais comumente utilizado. O cálculo da média leva em consideração o somatório de i observações/amostras dividido pelo total N de amostras. O R possui uma função para média, mean():
+
+```{r}
+mean(peso)
+mean(altura)
+```
+### Mediana
+A mediana é simplesmente o "meio" dos valores amostrados quando organizados em ordem crescente: existirá o mesmo número de observações antes e depois da mediana. Ela não é um parâmetro estatístico muito representante da amostragem, a menos que esta tenha uma distribuição simétrica, e apenas nesse último caso serve como uma estimativa da média. O R também possui uma função para a mediana:
+```{r}
+median(altura)
+median(peso)
+```
+### Moda
+É o valor dentre as amostras que aparece mais vezes, sendo uma medida de concentração. A moda pode ser tanto um valor único como uma série de valores frequentes. O R não possui uma função nativa para a moda.
+
+## Medidas de dispersão
+Uma medida de dispersão nos diz o quanto um dado varia em relação as suas medidas de tendência central, onde medidas próximas ao centro da distribuição possuem menor dispersão, e vice-versa. Elas são úteis porque as medidas de tendência central são, na maioria dos casos, insuficientes para descrever um conjunto de dados.
+
+### Quantis
+Os quantis dividem as amostras em frações. Os **quartis**, por exemplo, são medidas posicionadas em frações de 1/4 a 1/4 de todas as amostras. A função quantile() nos dá os primeiro, segundo (que é a mediana) e terceiro quartis, além do primeiro e último dado (0% e 100%).
+```{r}
+quantile(peso)
+quantile(altura)
+```
+### Variância
+A variância mede o quão distantes os valores estão da média, e é obtida através da soma dos quadrados (para considerar também valores negativos) entre cada valor e a média aritmética das amostras, dividida pela quantidade de elementos observado menos 1. Quanto maior for a variância, mais distantes da média estarão os valores das amostras. O R possui uma função para o cálculo da variância:
+```{r}
+var(peso)
+var(altura)
+```
+Ocorre a subtração de 1 do total de amostras pois o resultado da divisão diretamente por um subestima o valor "real" da variância, isso é, a variância da população. Como a variância está ao quadrado, ela não está na mesma unidade das observações das amostras.
+
+### Desvio padrão
+O desvio padrão é a raiz quadrada positiva da variância, o que remove o problema do parâmetro não está na mesma unidade das observações. na prática, o desvio padrão indica qual o "erro" em relação a média. O R também possui uma função para o desvio padrão:
+```{r}
+sd(peso)
+sd(altura)
+```
+### Coeficiente de variação
+Como medidores de variabilidade, tanto a variância como o desvio padrão estão na magnitude dos dados: os dados para uma amostra do tamanho de orelhas de rato e de elefante vão ser muito diferentes, mesmo que a variância do elefante nem seja realmente grande. O coeficiente de variação demostra a variação relativa, fazendo com que valores sejam comparáveis independente da magnitude dos dados. Não existe função para o coeficiente de variação, mas é possível escrevê-la a partir da combinação de funções. O cálculo se dá pelo desvio padrão sobre a média da população, multiplicado por 100%.
+```{r}
+100*(sd(altura)/mean(altura))
+100*(sd(peso)/mean(peso))
+
+```
+# Probabilidade
+
+
